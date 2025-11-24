@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CALENDAR</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <main id="main-wrapper">
+        
+        <div id="calendar-app">
+            
+            <div id="calendar-header">
+                <button id="prev-month"> &lt; </button>
+                <div id="current-date-display">
+                    <h2 id="current-month-year" class="compact-date">2025년 11월</h2>
+                </div>
+                <button id="next-month"> &gt; </button>
+            </div>
+            
+            <div id="calendar-grid">
+                <div class="day-label sunday-label">일</div>
+                <div class="day-label">월</div>
+                <div class="day-label">화</div>
+                <div class="day-label">수</div>
+                <div class="day-label">목</div>
+                <div class="day-label">금</div>
+                <div class="day-label saturday-label">토</div>
+            </div>
+            
+            <div id="dates-container">
+                </div>
+            
+        </div>
+        
+        <div id="side-gui-panel">
+            
+            <div id="settings-area-container">
+                <button id="go-to-today" class="panel-button" style="background-color: var(--primary-color);">오늘로 이동</button>
+                <button id="open-settings-modal" class="panel-button">테마 설정</button>
+                <button id="clear-all-schedules" class="panel-button" style="background-color: var(--secondary-color);">모든 일정 삭제</button>
+            </div>
+            
+            <div id="schedule-input-container">
+                <h3>일정 추가</h3>
+                
+                <label for="schedule-date">시작 날짜:</label>
+                <input type="date" id="schedule-date" required>
+
+                <label for="schedule-end-date">종료 날짜 (선택):</label>
+                <input type="date" id="schedule-end-date">
+                
+                <label for="schedule-text">내용:</label>
+                <input type="text" id="schedule-text" placeholder="일정 내용을 입력하세요." required>
+                
+                <label for="schedule-repeat">반복:</label>
+                <select id="schedule-repeat">
+                    <option value="none">반복 없음</option>
+                    <option value="weekly">매주 반복</option>
+                    <option value="monthly">매월 반복</option>
+                </select>
+                
+                <label for="schedule-color">색상:</label>
+                <select id="schedule-color">
+                    <option value="#3F7EA6">파랑 (기본)</option>
+                    <option value="#D93030">빨강</option>
+                    <option value="#5BA666">초록</option>
+                    <option value="#F2C230">노랑</option>
+                    <option value="#BF69B1">보라</option>
+                    <option value="#F2AE30">주황</option>
+                    <option value="#54A1BF">하늘</option>
+                    <option value="#BFBFB0">회색</option>
+                </select>
+                
+                <button id="add-button" class="panel-button" style="background-color: var(--primary-color);">일정 추가</button>
+            </div>
+        </div>
+        
+    </main>
+    
+    <div id="edit-modal-overlay" class="modal-overlay hidden">
+        <div id="edit-modal-content">
+            <h3>일정 수정</h3>
+            <input type="hidden" id="edit-id">
+
+            <label for="edit-date">시작 날짜:</label>
+            <input type="date" id="edit-date" required>
+            
+            <label for="edit-end-date">종료 날짜 (선택):</label>
+            <input type="date" id="edit-end-date">
+
+            <label for="edit-text">내용:</label>
+            <input type="text" id="edit-text" required>
+            
+            <label for="edit-repeat">반복:</label>
+            <select id="edit-repeat">
+                <option value="none">반복 없음</option>
+                <option value="weekly">매주 반복</option>
+                <option value="monthly">매월 반복</option>
+            </select>
+            
+            <label for="edit-color">색상:</label>
+            <select id="edit-color">
+                    <option value="#3F7EA6">파랑 (기본)</option>
+                    <option value="#D93030">빨강</option>
+                    <option value="#5BA666">초록</option>
+                    <option value="#F2C230">노랑</option>
+                    <option value="#BF69B1">보라</option>
+                    <option value="#F2AE30">주황</option>
+                    <option value="#54A1BF">하늘</option>
+                    <option value="#BFBFB0">회색</option>
+                </select>
+
+            <div class="modal-buttons">
+                <button id="close-edit-modal">취소</button>
+                <button id="save-edit-button">저장</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="detail-modal-overlay" class="modal-overlay hidden" data-current-id="">
+        <div id="detail-schedule-modal">
+            <h3>일정 상세</h3>
+            <p><strong>날짜:</strong> <span id="detail-date"></span></p>
+            <p><strong>내용:</strong> <span id="detail-text"></span></p>
+            <p><strong>반복:</strong> <span id="detail-repeat"></span></p>
+            <div class="modal-buttons">
+                <button id="delete-from-detail">삭제</button>
+                <button id="edit-from-detail">수정</button>
+                <button id="close-detail-modal">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="daily-list-modal-overlay" class="modal-overlay hidden">
+        <div id="daily-list-modal">
+            <h3><span id="daily-list-date"></span> 일정 목록</h3>
+            <div id="daily-list-container">
+                </div>
+            <div class="modal-buttons">
+                <button id="close-daily-list-modal">닫기</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="settings-modal-overlay" class="modal-overlay hidden">
+        <div id="settings-modal">
+            <h3>테마 설정</h3>
+            
+            <h4>테마 선택</h4>
+            <div id="theme-selector">
+                <button data-theme="1" style="background-color: #34479e;">1</button>
+                <button data-theme="2" style="background-color: #009688;">2</button>
+                <button data-theme="3" style="background-color: #595958;">3</button>
+                <button data-theme="4" style="background-color: #3c5070;">4</button>
+            </div>
+            
+            <h4>배경 이미지</h4>
+            <input type="file" id="background-image-input" accept="image/*">
+            <div class="modal-buttons" style="text-align: left;">
+                 <button id="reset-background" style="background-color: #95a5a6; color: white; margin-left: 0;">배경 초기화</button>
+            </div>
+
+            <div class="modal-buttons">
+                <button id="close-settings-modal">닫기</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
